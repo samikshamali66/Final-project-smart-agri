@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Fertilizer Recommendation & Optimization | AgriVision AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+        }
+
+        :root {
+            --primary: #4CAF50;
+            --dark: #1b4332;
+            --light: #81c784;
+            --white: #ffffff;
+            --text: #1f2937;
+            --shadow: 0 15px 35px rgba(0, 0, 0, .15);
+        }
+
+        body {
+            background: linear-gradient(rgba(20, 45, 20, .60), rgba(20, 45, 20, .60)),
+                url("https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=1800&q=80");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ===== Navbar ===== */
+        header {
+            position: sticky;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 8%;
+            background: rgba(255, 255, 255, .88);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .logo {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--dark);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo span {
+            color: #2e7d32;
+        }
+
+        nav {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #355d3a;
+            font-size: 15px;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: .3s;
+        }
+
+        nav a:hover,
+        nav a.active {
+            background: #4CAF50;
+            color: white;
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.35);
+        }
+
+        .nav-login {
+            background: var(--dark);
+            color: white !important;
+        }
+
+        /* ===== Main ===== */
+        .container {
+            width: 90%;
+            max-width: 1300px;
+            margin: 40px auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            flex: 1;
+        }
+
+        /* ===== Card ===== */
+        .card {
+            background: rgba(255, 255, 255, .94);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            padding: 40px;
+            border-radius: 25px;
+            box-shadow: var(--shadow);
+        }
+
+        .card h1 {
+            color: #1b4332;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .card p.desc {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.7;
+            margin-bottom: 25px;
+        }
+
+        /* ===== Form ===== */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full {
+            grid-column: span 2;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            color: #1b4332;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+
+        .form-group input, .form-group select {
+            padding: 13px 15px;
+            border: 1px solid #c8decb;
+            border-radius: 12px;
+            font-size: 15px;
+            outline: none;
+            transition: .3s;
+            background: #fbfdfb;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            border-color: #4CAF50;
+            box-shadow: 0 0 10px rgba(76, 175, 80, .25);
+            background: white;
+        }
+
+        .predict-btn {
+            margin-top: 25px;
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #4CAF50, #1b4332);
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: .3s;
+            box-shadow: 0 8px 20px rgba(27, 67, 50, 0.25);
+        }
+
+        .predict-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(27, 67, 50, 0.35);
+        }
+
+        /* ===== RESULT BOX ===== */
+        .result-box {
+            display: none;
+            margin-top: 30px;
+            padding: 25px;
+            background: #f3faf4;
+            border-left: 6px solid #4CAF50;
+            border-radius: 16px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .result-box h2 {
+            color: #1b4332;
+            font-size: 22px;
+            margin-bottom: 12px;
+        }
+
+        .result-detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .result-card {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid #e0eee2;
+        }
+
+        .result-card label {
+            font-size: 12px;
+            color: #557559;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .result-card .val {
+            font-size: 18px;
+            font-weight: 800;
+            color: #1b4332;
+            margin-top: 4px;
+        }
+
+        .profile-sync-note {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #2e7d32;
+            background: #d4edda;
+            padding: 6px 14px;
+            border-radius: 20px;
+            margin-top: 15px;
+            text-decoration: none;
+        }
+
+        .profile-sync-note:hover {
+            background: #c3e6cb;
+        }
+
+        /* Sidebar Info */
+        .sidebar-item {
+            padding: 12px 0;
+            border-bottom: 1px solid #eef5ee;
+        }
+
+        .sidebar-item h4 {
+            color: #1b4332;
+            font-size: 15px;
+            margin-bottom: 4px;
+        }
+
+        .sidebar-item p {
+            font-size: 13px;
+            color: #557559;
+            line-height: 1.5;
+        }
+
+        footer {
+            background: rgba(20, 50, 24, 0.95);
+            padding: 24px;
+            text-align: center;
+            color: #cdeccd;
+            font-size: 15px;
+            margin-top: auto;
+        }
+
+        footer a {
+            color: #8cff90;
+            text-decoration: none;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media(max-width: 950px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .form-group.full {
+                grid-column: span 1;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== Navbar ===== -->
+    <header>
+        <a href="index.html" class="logo">
+            🌾 <span>AgriVision AI</span>
+        </a>
+
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="crop-recommend.html">Crop Prediction</a>
+            <a href="fertilizer.html" class="active">Fertilizer</a>
+            <a href="disease.html">Disease Detection</a>
+            <a href="profile.html">Farmer Profile</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Support</a>
+            <a href="login.html" class="nav-login" id="navAccountBtn">Login</a>
+        </nav>
+    </header>
+
+    <!-- ===== Main Container ===== -->
+    <div class="container">
+        
+        <div class="card">
+            <h1>🌿 AI Fertilizer Advisory & Optimization</h1>
+            <p class="desc">
+                Input your current crop type, soil chemistry (Nitrogen, Phosphorus, Potassium), and field parameters. Our AI computes the optimal nutrient balance, fertilizer product blend, and exact application dosage per acre.
+            </p>
+
+            <form id="fertilizerForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>🌾 Target Crop</label>
+                        <select id="cropSelect" required>
+                            <option value="Cotton">Cotton (Kapas)</option>
+                            <option value="Wheat">Wheat</option>
+                            <option value="Rice">Rice (Paddy)</option>
+                            <option value="Sugarcane">Sugarcane</option>
+                            <option value="Maize">Maize (Corn)</option>
+                            <option value="Grapes">Grapes / Horticulture</option>
+                            <option value="Soybean">Soybean / Pulses</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>🌱 Soil Type</label>
+                        <select id="soilSelect" required>
+                            <option value="Black Cotton Soil">Black Cotton Soil</option>
+                            <option value="Red Sandy Loam">Red Sandy Loam</option>
+                            <option value="Clayey Loam">Clayey Loam</option>
+                            <option value="Alluvial Soil">Alluvial Soil</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>🌱 Soil Nitrogen (N) (kg/ha)</label>
+                        <input type="number" id="nitrogen" placeholder="e.g. 60" value="65" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>🧪 Soil Phosphorus (P) (kg/ha)</label>
+                        <input type="number" id="phosphorus" placeholder="e.g. 35" value="38" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>🌿 Soil Potassium (K) (kg/ha)</label>
+                        <input type="number" id="potassium" placeholder="e.g. 40" value="42" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>🧫 Soil pH Level</label>
+                        <input type="number" step="0.1" id="soilph" placeholder="e.g. 6.8" value="6.8" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>🌡 Ambient Temperature (°C)</label>
+                        <input type="number" step="0.1" id="temperature" placeholder="e.g. 27" value="28" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>💧 Soil Moisture / Humidity (%)</label>
+                        <input type="number" step="0.1" id="humidity" placeholder="e.g. 60" value="55" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="predict-btn">
+                    🔬 Calculate Fertilizer Recommendation
+                </button>
+            </form>
+
+            <!-- Results Output -->
+            <div class="result-box" id="resultBox">
+                <h2>🧪 Fertilizer Recommendation Result</h2>
+                
+                <div class="result-detail-grid">
+                    <div class="result-card">
+                        <label>Primary Fertilizer</label>
+                        <div class="val" id="resFertilizer">Urea + DAP</div>
+                    </div>
+                    <div class="result-card">
+                        <label>Recommended Dosage</label>
+                        <div class="val" id="resDosage">45 kg / Acre</div>
+                    </div>
+                    <div class="result-card">
+                        <label>Application Stage</label>
+                        <div class="val" id="resTiming">Split Dose (Basal + 30 Days)</div>
+                    </div>
+                    <div class="result-card">
+                        <label>Soil Nutrient Status</label>
+                        <div class="val" id="resStatus" style="color:#2e7d32;">Balanced</div>
+                    </div>
+                </div>
+
+                <div style="background:white; padding:15px; border-radius:12px; margin-top:10px; border:1px solid #e0eee2;">
+                    <h4 style="color:#1b4332; margin-bottom:5px;">💡 Expert Advisory & Instructions:</h4>
+                    <p id="resInstructions" style="color:#444; font-size:14px; line-height:1.6;"></p>
+                </div>
+
+                <a href="profile.html" class="profile-sync-note">
+                    ✓ Saved to Farmer Profile History • View History in Dashboard &rarr;
+                </a>
+            </div>
+
+        </div>
+
+        <!-- Sidebar Guide -->
+        <div>
+            <div class="card">
+                <h2 style="color:#1b4332; margin-bottom:15px; font-size:20px; border-bottom:2px solid #e2ece3; padding-bottom:8px;">
+                    📊 Key Soil Nutrients Guide
+                </h2>
+
+                <div class="sidebar-item">
+                    <h4>🌱 Nitrogen (N)</h4>
+                    <p>Essential for vegetative vigor, stem elongation, leaf greenness, and early plant development.</p>
+                </div>
+
+                <div class="sidebar-item">
+                    <h4>🧪 Phosphorus (P)</h4>
+                    <p>Powers root expansion, seed germination, flowering vigor, and energy transfer within plant cells.</p>
+                </div>
+
+                <div class="sidebar-item">
+                    <h4>🌿 Potassium (K)</h4>
+                    <p>Regulates water uptake, builds drought resistance, and strengthens grain and fruit quality.</p>
+                </div>
+
+                <div class="sidebar-item">
+                    <h4>🧫 Soil pH</h4>
+                    <p>Optimal range 6.2 - 7.5. Acidic or alkaline extremes lock nutrients out of root absorption.</p>
+                </div>
+
+                <div style="margin-top:20px;">
+                    <a href="disease.html" style="color:#2e7d32; font-weight:700; text-decoration:none; font-size:14px;">
+                        Need leaf disease inspection? Open Disease Scanner &rarr;
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ===== Footer ===== -->
+    <footer>
+        <p>© 2026 AgriVision AI | Smart Agriculture Intelligence System 🌾</p>
+        <p style="margin-top:6px; font-size:13px;">
+            <a href="index.html">Home</a> | <a href="crop-recommend.html">Crop Prediction</a> | <a href="disease.html">Disease</a> | <a href="profile.html">Farmer Profile</a> | <a href="about.html">About</a> | <a href="contact.html">Support</a>
+        </p>
+    </footer>
+
+    <!-- ===== Script ===== -->
+    <script>
+        // Check user session
+        const savedUser = localStorage.getItem("agri_user");
+        if (savedUser) {
+            try {
+                const u = JSON.parse(savedUser);
+                if (u.fullname) {
+                    const btn = document.getElementById("navAccountBtn");
+                    btn.innerHTML = "👤 " + u.fullname.split(" ")[0];
+                    btn.href = "profile.html";
+                }
+            } catch(e) {}
+        }
+
+        // Fertilizer Calculation Algorithm
+        document.getElementById("fertilizerForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+
+            const crop = document.getElementById("cropSelect").value;
+            const soil = document.getElementById("soilSelect").value;
+            const n = parseFloat(document.getElementById("nitrogen").value);
+            const p = parseFloat(document.getElementById("phosphorus").value);
+            const k = parseFloat(document.getElementById("potassium").value);
+            const ph = parseFloat(document.getElementById("soilph").value);
+
+            let fert = "";
+            let dosage = "";
+            let timing = "";
+            let status = "Adequate";
+            let instructions = "";
+
+            if (n < 50) {
+                fert = "Urea (46% N) + Compost";
+                dosage = "50 kg / Acre";
+                timing = "Basal (50%) + Top Dressing at 30 Days (50%)";
+                status = "Nitrogen Deficient";
+                instructions = "High nitrogen deficit detected. Apply half dose during field preparation and second half with irrigation after 30 days of sowing.";
+            } else if (p < 30) {
+                fert = "DAP (Diammonium Phosphate 18:46:0)";
+                dosage = "40 kg / Acre";
+                timing = "Basal Placement at Sowing";
+                status = "Phosphorus Deficient";
+                instructions = "Phosphorus is critical for root proliferation. Place DAP 5 cm below seed level to maximize nutrient uptake.";
+            } else if (k < 35) {
+                fert = "MOP (Muriate of Potash 60% K2O)";
+                dosage = "30 kg / Acre";
+                timing = "Pre-Flowering Stage";
+                status = "Potassium Deficient";
+                instructions = "Low potassium will affect crop drought resistance and boll/grain filling. Incorporate MOP before the onset of flowering.";
+            } else if (ph < 6.0) {
+                fert = "Agricultural Lime + NPK 10:26:26";
+                dosage = "35 kg NPK + 100 kg Lime / Acre";
+                timing = "Soil Amendment Pre-Sowing";
+                status = "Acidic Soil (Low pH)";
+                instructions = "Soil is acidic. Broadcast agricultural lime 2 weeks prior to sowing, followed by balanced NPK complex.";
+            } else if (crop === "Cotton" || crop === "Sugarcane") {
+                fert = "NPK 10:26:26 + Zinc Sulfate";
+                dosage = "45 kg / Acre";
+                timing = "3 Split Applications";
+                status = "High Demand Crop";
+                instructions = "Heavy nutrient consumer crop. Apply balanced NPK along with 5 kg Zinc Sulfate per acre to boost branch and boll development.";
+            } else {
+                fert = "NPK 19:19:19 + Organic Manure";
+                dosage = "30 kg / Acre";
+                timing = "Early Vegetative Stage";
+                status = "Optimal Soil Health";
+                instructions = "Soil nutrient levels are generally favorable. Maintain soil organic matter by adding vermicompost with light NPK foliar spray.";
+            }
+
+            document.getElementById("resFertilizer").innerText = fert;
+            document.getElementById("resDosage").innerText = dosage;
+            document.getElementById("resTiming").innerText = timing;
+            document.getElementById("resStatus").innerText = status;
+            document.getElementById("resInstructions").innerText = instructions;
+
+            document.getElementById("resultBox").style.display = "block";
+
+            // Save to localStorage history for Farmer Profile
+            try {
+                let existingHistory = localStorage.getItem("agri_prediction_history");
+                let historyArr = [];
+                if (existingHistory) {
+                    historyArr = JSON.parse(existingHistory);
+                }
+                const newRecord = {
+                    type: "Fertilizer Advisory",
+                    icon: "🌿",
+                    title: "Fertilizer: " + fert,
+                    detail: `Crop: ${crop} | Soil: ${soil} | Dosage: ${dosage} (${status})`,
+                    date: "Just now",
+                    badge: "Fertilizer Synced"
+                };
+                historyArr.unshift(newRecord);
+                if (historyArr.length > 20) historyArr.pop();
+                localStorage.setItem("agri_prediction_history", JSON.stringify(historyArr));
+            } catch(err) {
+                console.error(err);
+            }
+        });
+    </script>
+</body>
+</html>

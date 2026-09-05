@@ -1,0 +1,62 @@
+/* LOGIN */
+.login-body{
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(135deg,#1e3c72,#2a5298);
+}
+
+.login-box{
+    background:white;
+    padding:30px;
+    border-radius:15px;
+    width:300px;
+    text-align:center;
+}
+
+/* NAVBAR */
+.navbar{
+    display:flex;
+    justify-content:space-between;
+    padding:15px;
+    background:#0f2027;
+    color:white;
+}
+
+.navbar a{
+    color:white;
+    margin:0 10px;
+    text-decoration:none;
+}
+
+/* HERO */
+.hero{
+    text-align:center;
+    padding:100px;
+    background:linear-gradient(135deg,#2c5364,#1abc9c);
+    color:white;
+}
+
+.btn{
+    padding:10px 20px;
+    background:#00ffb3;
+    color:black;
+    border-radius:10px;
+    text-decoration:none;
+}
+
+/* CARD */
+.card{
+    width:350px;
+    margin:50px auto;
+    padding:20px;
+    background:#f1f1f1;
+    border-radius:10px;
+}
+
+input, textarea{
+    width:100%;
+    margin:10px 0;
+    padding:10px;
+}

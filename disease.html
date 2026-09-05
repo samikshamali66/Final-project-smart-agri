@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Plant Disease Detection & Protection | AgriVision AI</title>
+
+    <style>
+        :root {
+            --dark: #1f4d2b;
+            --green: #5cb35f;
+            --light: #f1f8f3;
+            --text: #18351d;
+            --danger: #d9534f;
+            --warning: #f0ad4e;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(
+                rgba(25, 65, 25, 0.60),
+                rgba(25, 65, 25, 0.50)
+            ),
+            url("https://images.unsplash.com/photo-1500382017468-9049fed747ef")
+            center/cover fixed;
+            min-height: 100vh;
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* NAVBAR */
+        header {
+            background: rgba(255, 255, 255, .88);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 8%;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .logo {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--dark);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        nav {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #355d3a;
+            font-weight: 600;
+            font-size: 15px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: .3s;
+        }
+
+        nav a:hover,
+        nav a.active {
+            background: #5cb35f;
+            color: white;
+            box-shadow: 0 4px 12px rgba(92, 179, 95, 0.35);
+        }
+
+        .nav-login {
+            background: var(--dark);
+            color: white !important;
+        }
+
+        /* MAIN */
+        .container {
+            width: 90%;
+            max-width: 950px;
+            margin: 40px auto;
+            flex: 1;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, .94);
+            padding: 40px;
+            border-radius: 28px;
+            box-shadow: 0 20px 45px rgba(0, 0, 0, .25);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        h1 {
+            font-size: 32px;
+            color: var(--dark);
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #557559;
+            font-size: 16px;
+            margin-bottom: 25px;
+        }
+
+        /* INPUT */
+        label {
+            display: block;
+            font-weight: 700;
+            color: var(--dark);
+            margin-top: 18px;
+            font-size: 15px;
+        }
+
+        select {
+            width: 100%;
+            padding: 14px 16px;
+            margin-top: 6px;
+            border-radius: 12px;
+            border: 1px solid #b7d8bb;
+            font-size: 15px;
+            outline: none;
+            background: #fbfdfb;
+            transition: .3s;
+        }
+
+        select:focus {
+            border-color: #5cb35f;
+            box-shadow: 0 0 10px rgba(92, 179, 95, 0.3);
+            background: white;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 25px;
+            padding: 16px;
+            border: none;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #5cb35f, #1f4d2b);
+            color: white;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: .3s;
+            box-shadow: 0 8px 20px rgba(31, 77, 43, 0.25);
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(31, 77, 43, 0.35);
+        }
+
+        /* RESULT */
+        .result {
+            display: none;
+            margin-top: 30px;
+            padding: 25px;
+            border-radius: 18px;
+            background: #f3faf4;
+            border-left: 6px solid #5cb35f;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .result h3 {
+            color: var(--dark);
+            font-size: 22px;
+            margin-bottom: 12px;
+        }
+
+        .res-highlight {
+            font-size: 17px;
+            color: #1f4d2b;
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+
+        .risk-badge {
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 14px;
+            font-weight: 800;
+            font-size: 13px;
+            margin-left: 8px;
+        }
+
+        .risk-low {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .risk-med {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .risk-high {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .info-box {
+            background: white;
+            padding: 16px;
+            border-radius: 14px;
+            border: 1px solid #d5ebd5;
+        }
+
+        .info-box h4 {
+            color: var(--dark);
+            margin-bottom: 6px;
+            font-size: 15px;
+        }
+
+        .info-box p {
+            color: #557559;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .profile-sync-note {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #2e7d32;
+            background: #d4edda;
+            padding: 6px 14px;
+            border-radius: 20px;
+            margin-top: 18px;
+            text-decoration: none;
+        }
+
+        .profile-sync-note:hover {
+            background: #c3e6cb;
+        }
+
+        footer {
+            background: rgba(20, 50, 24, 0.95);
+            padding: 24px;
+            text-align: center;
+            color: #cdeccd;
+            font-size: 15px;
+            margin-top: auto;
+        }
+
+        footer a {
+            color: #8cff90;
+            text-decoration: none;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media(max-width: 768px) {
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <header>
+        <a href="index.html" class="logo">
+            🌾 <span>AgriVision AI</span>
+        </a>
+
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="crop-recommend.html">Crop Prediction</a>
+            <a href="fertilizer.html">Fertilizer</a>
+            <a href="disease.html" class="active">Disease Detection</a>
+            <a href="profile.html">Farmer Profile</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Support</a>
+            <a href="login.html" class="nav-login" id="navAccountBtn">Login</a>
+        </nav>
+    </header>
+
+    <!-- CONTENT -->
+    <div class="container">
+        <div class="card">
+            <h1>🔬 AI Plant Disease Diagnosis</h1>
+            <p class="subtitle">Select your infected crop and observed visual symptoms to receive instant diagnosis and treatment methods.</p>
+
+            <label>🌾 Select Crop</label>
+            <select id="crop">
+                <option value="Grapes 🍇">Grapes 🍇</option>
+                <option value="Guava 🌿">Guava 🌿</option>
+                <option value="Wheat 🌾">Wheat 🌾</option>
+                <option value="Cotton 🌱">Cotton 🌱</option>
+                <option value="Sugarcane 🎋">Sugarcane 🎋</option>
+                <option value="Vegetables 🍅">Vegetables (Tomato / Chilli / Potato) 🍅</option>
+            </select>
+
+            <label>🍃 Observed Leaf / Plant Condition</label>
+            <select id="condition">
+                <option value="Healthy">Healthy (No visible damage / normal growth)</option>
+                <option value="Brown Spots">Brown or Black Spots on Leaves</option>
+                <option value="Yellow Leaves">Yellowing of Leaves (Chlorosis)</option>
+                <option value="Leaf Curl">Leaf Curling / Stunted Twisted Growth</option>
+                <option value="Powdery Mildew">White Powdery Coating on Leaf Surface</option>
+            </select>
+
+            <button onclick="analyzeDisease()">
+                🔍 Diagnose Crop Disease
+            </button>
+
+            <!-- RESULT -->
+            <div class="result" id="result">
+                <h3>🌱 Diagnostic Report</h3>
+                <div class="res-highlight" id="disease"></div>
+                <div class="res-highlight" id="risk"></div>
+
+                <div class="info-grid">
+                    <div class="info-box">
+                        <h4>🦠 Probable Cause</h4>
+                        <p id="cause"></p>
+                    </div>
+
+                    <div class="info-box">
+                        <h4>💊 Recommended Treatment & Action</h4>
+                        <p id="treatment"></p>
+                    </div>
+                </div>
+
+                <a href="profile.html" class="profile-sync-note">
+                    ✓ Saved to Farmer Profile History • View History in Dashboard &rarr;
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>© 2026 AgriVision AI | Smart Agriculture Intelligence System 🌾</p>
+        <p style="margin-top:6px; font-size:13px;">
+            <a href="index.html">Home</a> | <a href="crop-recommend.html">Crop Prediction</a> | <a href="fertilizer.html">Fertilizer</a> | <a href="profile.html">Farmer Profile</a> | <a href="about.html">About</a> | <a href="contact.html">Support</a>
+        </p>
+    </footer>
+
+    <script>
+        // Check user session
+        const savedUser = localStorage.getItem("agri_user");
+        if (savedUser) {
+            try {
+                const u = JSON.parse(savedUser);
+                if (u.fullname) {
+                    const btn = document.getElementById("navAccountBtn");
+                    btn.innerHTML = "👤 " + u.fullname.split(" ")[0];
+                    btn.href = "profile.html";
+                }
+            } catch(e) {}
+        }
+
+        function analyzeDisease() {
+            let crop = document.getElementById("crop").value;
+            let condition = document.getElementById("condition").value;
+
+            let disease = "";
+            let cause = "";
+            let treatment = "";
+            let risk = "LOW";
+            let riskClass = "risk-low";
+
+            if (condition === "Healthy") {
+                disease = "Healthy Crop Status 🌿";
+                cause = "No harmful pathogen or physiological stress detected. Foliage exhibits vigorous chlorophyll levels.";
+                treatment = "Maintain standard irrigation schedules and routine organic monitoring.";
+                risk = "LOW";
+                riskClass = "risk-low";
+            } else if (condition === "Brown Spots") {
+                disease = crop.split(" ")[0] + " Cercospora Leaf Spot (Fungal)";
+                cause = "Fungal infection triggered by elevated air moisture, stagnant humidity, and poor canopy aeration.";
+                treatment = "Spray Copper Oxychloride (0.25%) or Mancozeb (2g/liter of water). Prune and destroy diseased foliage.";
+                risk = "HIGH";
+                riskClass = "risk-high";
+            } else if (condition === "Yellow Leaves") {
+                disease = "Nitrogen / Iron Chlorosis (Nutrient Deficiency)";
+                cause = "Soil nutrient imbalance, root asphyxiation due to over-irrigation, or micro-nutrient depletion.";
+                treatment = "Apply balanced NPK fertilizer with chelated Iron (Fe-EDTA 1g/L) and ensure proper soil drainage.";
+                risk = "MEDIUM";
+                riskClass = "risk-med";
+            } else if (condition === "Leaf Curl") {
+                disease = "Leaf Curl Virus (Begomovirus)";
+                cause = "Viral pathogen vectored by whiteflies (Bemisia tabaci) and thrips feeding on tender plant shoots.";
+                treatment = "Control insect vectors using Neem oil (5ml/L) or Imidacloprid (0.5ml/L). Uproot severely affected plants.";
+                risk = "HIGH";
+                riskClass = "risk-high";
+            } else {
+                disease = "Powdery Mildew (Erysiphales)";
+                cause = "Fungal epiphytic spores spreading rapidly in warm, dry climates with cool humid nights.";
+                treatment = "Apply wettable sulfur (2g/L) or Potassium bicarbonate spray. Avoid excessive nitrogen fertilizers.";
+                risk = "MEDIUM";
+                riskClass = "risk-med";
+            }
+
+            // Display
+            document.getElementById("disease").innerHTML = "<b>Crop Diagnosed:</b> " + crop + "<br><b>Pathology:</b> " + disease;
+            document.getElementById("risk").innerHTML = "<b>Risk Level:</b> <span class='risk-badge " + riskClass + "'>" + risk + " RISK</span>";
+            document.getElementById("cause").innerText = cause;
+            document.getElementById("treatment").innerText = treatment;
+
+            document.getElementById("result").style.display = "block";
+
+            // Sync to Farmer Profile History
+            try {
+                let existingHistory = localStorage.getItem("agri_prediction_history");
+                let historyArr = [];
+                if (existingHistory) {
+                    historyArr = JSON.parse(existingHistory);
+                }
+                const newRecord = {
+                    type: "Disease Detection",
+                    icon: "🦠",
+                    title: disease,
+                    detail: `${crop} • Risk: ${risk} | Cause: ${condition}`,
+                    date: "Just now",
+                    badge: risk + " RISK"
+                };
+                historyArr.unshift(newRecord);
+                if (historyArr.length > 20) historyArr.pop();
+                localStorage.setItem("agri_prediction_history", JSON.stringify(historyArr));
+            } catch(err) {
+                console.error(err);
+            }
+        }
+    </script>
+</body>
+</html>

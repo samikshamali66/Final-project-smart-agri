@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agro Support Center & Assistance | AgriVision AI</title>
+
+    <style>
+        :root {
+            --dark: #2d5231;
+            --green: #5cb35f;
+            --light: #f1f8f3;
+            --text: #18351d;
+            --muted: #557559;
+            --border: rgba(92, 179, 95, .3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(
+                rgba(25, 65, 25, .60),
+                rgba(25, 65, 25, .50)
+            ),
+            url("https://images.unsplash.com/photo-1500530855697-b586d89ba3ee")
+            center/cover fixed;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: var(--text);
+        }
+
+        /* NAVBAR */
+        header {
+            background: rgba(255, 255, 255, .88);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            padding: 16px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .logo {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--dark);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        nav {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #355d3a;
+            font-weight: 600;
+            font-size: 15px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: .3s;
+        }
+
+        nav a:hover,
+        nav a.active {
+            background: #5cb35f;
+            color: white;
+            box-shadow: 0 4px 12px rgba(92, 179, 95, 0.35);
+        }
+
+        .nav-login {
+            background: var(--dark);
+            color: white !important;
+        }
+
+        /* MAIN */
+        .main-container {
+            width: 90%;
+            max-width: 1050px;
+            margin: 40px auto;
+            flex: 1;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 36px;
+            color: white;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #e2f7e4;
+            font-size: 17px;
+        }
+
+        .support-card {
+            background: rgba(255, 255, 255, .94);
+            padding: 40px;
+            border-radius: 28px;
+            box-shadow: 0 20px 45px rgba(0, 0, 0, .25);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .group.full {
+            grid-column: span 2;
+        }
+
+        label {
+            font-weight: 700;
+            color: var(--dark);
+            font-size: 14px;
+            margin-bottom: 6px;
+        }
+
+        input, select, textarea {
+            padding: 13px 16px;
+            border-radius: 12px;
+            border: 1px solid #b7d8bb;
+            font-size: 15px;
+            outline: none;
+            background: #fbfdfb;
+            transition: .3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: #5cb35f;
+            box-shadow: 0 0 10px rgba(92, 179, 95, 0.3);
+            background: white;
+        }
+
+        button {
+            padding: 16px;
+            border: none;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #5cb35f, #2d5231);
+            color: white;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: .3s;
+            box-shadow: 0 8px 20px rgba(45, 82, 49, 0.25);
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(45, 82, 49, 0.35);
+        }
+
+        .info {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .info-box {
+            background: rgba(255, 255, 255, .94);
+            padding: 22px;
+            border-radius: 18px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, .1);
+            border-top: 4px solid var(--green);
+        }
+
+        .info-box h3 {
+            color: var(--dark);
+            font-size: 18px;
+            margin-bottom: 6px;
+        }
+
+        .info-box p {
+            color: #557559;
+            font-size: 14px;
+        }
+
+        .alert-success {
+            display: none;
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            border: 1px solid #c8e6c9;
+            text-align: center;
+        }
+
+        footer {
+            background: rgba(20, 50, 24, 0.95);
+            padding: 24px;
+            text-align: center;
+            color: #cdeccd;
+            font-size: 15px;
+            margin-top: auto;
+        }
+
+        footer a {
+            color: #8cff90;
+            text-decoration: none;
+        }
+
+        @media(max-width: 800px) {
+            .form-grid, .info {
+                grid-template-columns: 1fr;
+            }
+            .group.full {
+                grid-column: span 1;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <header>
+        <a href="index.html" class="logo">
+            🌾 <span>AgriVision AI</span>
+        </a>
+
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="crop-recommend.html">Crop Prediction</a>
+            <a href="fertilizer.html">Fertilizer</a>
+            <a href="disease.html">Disease Detection</a>
+            <a href="profile.html">Farmer Profile</a>
+            <a href="about.html">About</a>
+            <a href="contact.html" class="active">Support</a>
+            <a href="login.html" class="nav-login" id="navAccountBtn">Login</a>
+        </nav>
+    </header>
+
+    <div class="main-container">
+        <div class="header">
+            <h1>🌱 Agro Technical Support Center</h1>
+            <p>Connect directly with AgriVision AI agronomy advisors and agricultural engineers</p>
+        </div>
+
+        <div class="support-card">
+            <div class="alert-success" id="successBox">
+                ✅ <b>Support Request Submitted!</b> Ticket #<span id="ticketId"></span> has been created. An agricultural specialist will contact you within 24 hours.
+            </div>
+
+            <form id="contactForm" onsubmit="handleSubmit(event)">
+                <div class="form-grid">
+                    <div class="group">
+                        <label>Farmer Name</label>
+                        <input type="text" id="contactName" placeholder="Enter farmer name" required>
+                    </div>
+
+                    <div class="group">
+                        <label>Email Address</label>
+                        <input type="email" id="contactEmail" placeholder="Enter email" required>
+                    </div>
+
+                    <div class="group">
+                        <label>Farm Area (Acres / Hectares)</label>
+                        <input type="text" id="contactArea" placeholder="e.g. 12.5 Acres" required>
+                    </div>
+
+                    <div class="group">
+                        <label>Primary Crop</label>
+                        <select id="contactCrop" required>
+                            <option value="Cotton">Cotton (Kapas)</option>
+                            <option value="Wheat">Wheat</option>
+                            <option value="Rice">Rice (Paddy)</option>
+                            <option value="Sugarcane">Sugarcane</option>
+                            <option value="Grapes">Grapes / Vineyards</option>
+                            <option value="Vegetables">Vegetables / Horticulture</option>
+                        </select>
+                    </div>
+
+                    <div class="group full">
+                        <label>Describe Your Farming Issue or Technical Query</label>
+                        <textarea id="contactMessage" rows="5" placeholder="Detail your crop disease, pest infestation, soil acidity, or fertilizer inquiry..." required></textarea>
+                    </div>
+
+                    <div class="group full">
+                        <button type="submit" id="submitBtn">
+                            🚀 Submit Support Request
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="info">
+            <div class="info-box">
+                <h3>📞 24/7 Helpline</h3>
+                <p>Toll Free: 1800-266-AGRI<br>Direct: +91 98234 56789</p>
+            </div>
+
+            <div class="info-box">
+                <h3>📧 Email Support</h3>
+                <p>support@agrivision.ai<br>agro-advisory@agrivision.ai</p>
+            </div>
+
+            <div class="info-box">
+                <h3>🌾 Agronomy Center</h3>
+                <p>AgriVision Innovation Hub,<br>Nashik, Maharashtra, India</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>© 2026 AgriVision AI | Smart Agriculture Intelligence System 🌾</p>
+        <p style="margin-top:6px; font-size:13px;">
+            <a href="index.html">Home</a> | <a href="crop-recommend.html">Crop Prediction</a> | <a href="fertilizer.html">Fertilizer</a> | <a href="disease.html">Disease Detection</a> | <a href="profile.html">Farmer Profile</a> | <a href="about.html">About</a>
+        </p>
+    </footer>
+
+    <script>
+        // Check user session and autofill
+        window.addEventListener("DOMContentLoaded", () => {
+            const savedUser = localStorage.getItem("agri_user");
+            if (savedUser) {
+                try {
+                    const u = JSON.parse(savedUser);
+                    if (u.fullname) {
+                        const btn = document.getElementById("navAccountBtn");
+                        btn.innerHTML = "👤 " + u.fullname.split(" ")[0];
+                        btn.href = "profile.html";
+
+                        document.getElementById("contactName").value = u.fullname;
+                        document.getElementById("contactEmail").value = u.email || "";
+                        document.getElementById("contactArea").value = (u.farmSize ? u.farmSize + " Acres" : "10 Acres");
+                    }
+                } catch(e) {}
+            }
+        });
+
+        function handleSubmit(e) {
+            e.preventDefault();
+            const btn = document.getElementById("submitBtn");
+            btn.innerHTML = "⏳ Submitting Request...";
+            btn.disabled = true;
+
+            setTimeout(() => {
+                const ticketNumber = "AGRI-TICK-" + Math.floor(1000 + Math.random() * 9000);
+                document.getElementById("ticketId").innerText = ticketNumber;
+                document.getElementById("successBox").style.display = "block";
+                document.getElementById("contactForm").reset();
+
+                btn.innerHTML = "✓ Request Submitted";
+                setTimeout(() => {
+                    btn.innerHTML = "🚀 Submit Another Request";
+                    btn.disabled = false;
+                }, 3000);
+            }, 600);
+        }
+    </script>
+</body>
+</html>

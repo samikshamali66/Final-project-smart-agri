@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriVision AI | Smart Agriculture System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        :root {
+            --primary: #5cb35f;
+            --dark: #2d5231;
+            --light: #6ec271;
+            --white: #ffffff;
+            --text: #1f2937;
+            --shadow: 0 12px 30px rgba(0, 0, 0, .12);
+        }
+
+        body {
+            background: linear-gradient(rgba(15, 40, 20, .55), rgba(15, 40, 20, .55)),
+                url("https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1800&q=80");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: white;
+        }
+
+        /* ================= HEADER ================ */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 8%;
+            background: rgba(255, 255, 255, .15);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo span {
+            color: #8cff90;
+        }
+
+        nav {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-size: 15px;
+            transition: .3s;
+        }
+
+        nav a:hover,
+        nav a.active {
+            background: #5cb35f;
+            box-shadow: 0 4px 12px rgba(92, 179, 95, 0.4);
+        }
+
+        .login-btn {
+            background: #5cb35f;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .login-btn:hover {
+            background: #2d5231;
+        }
+
+        /* ================= HERO ================ */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 130px 8% 60px;
+        }
+
+        .hero-box {
+            max-width: 950px;
+            text-align: center;
+            background: rgba(255, 255, 255, .15);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            padding: 55px 40px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow: var(--shadow);
+            animation: fadeUp 1s ease;
+        }
+
+        .hero-box h1 {
+            font-size: 54px;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .hero-box h1 span {
+            color: #8cff90;
+        }
+
+        .hero-box p {
+            font-size: 20px;
+            line-height: 1.8;
+            margin-bottom: 18px;
+            color: #f1f8f3;
+        }
+
+        .highlight {
+            color: #bdfdbf;
+            font-weight: bold;
+        }
+
+        .buttons {
+            margin-top: 35px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .buttons a {
+            display: inline-block;
+            padding: 16px 32px;
+            border-radius: 40px;
+            font-size: 17px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: .3s;
+        }
+
+        .btn1 {
+            background: #5cb35f;
+            color: white;
+            box-shadow: 0 4px 15px rgba(92, 179, 95, 0.4);
+        }
+
+        .btn2 {
+            border: 2px solid white;
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .btn3 {
+            background: #2d5231;
+            color: white;
+            border: 2px solid #8cff90;
+        }
+
+        .btn1:hover {
+            transform: translateY(-4px);
+            background: #2d5231;
+        }
+
+        .btn2:hover {
+            background: white;
+            color: #2d5231;
+            transform: translateY(-4px);
+        }
+
+        .btn3:hover {
+            background: #5cb35f;
+            transform: translateY(-4px);
+        }
+
+        .scroll {
+            margin-top: 40px;
+            font-size: 17px;
+            animation: move 1.3s infinite;
+        }
+
+        @keyframes move {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(8px); }
+            100% { transform: translateY(0); }
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ================= FEATURES SECTION ================= */
+        .features {
+            padding: 90px 8%;
+            background: rgba(255, 255, 255, .95);
+            color: #1e3321;
+        }
+
+        .title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .title h2 {
+            font-size: 40px;
+            color: #2d5231;
+            margin-bottom: 15px;
+        }
+
+        .title p {
+            font-size: 18px;
+            color: #557559;
+            max-width: 850px;
+            margin: auto;
+            line-height: 1.8;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 35px 30px;
+            border-radius: 22px;
+            box-shadow: 0 12px 25px rgba(0, 0, 0, .08);
+            transition: .4s;
+            border-top: 6px solid #5cb35f;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, .14);
+            border-top-color: #2d5231;
+        }
+
+        .feature-card h3 {
+            font-size: 24px;
+            color: #2d5231;
+            margin: 18px 0 10px;
+        }
+
+        .feature-card p {
+            font-size: 16px;
+            line-height: 1.7;
+            color: #555;
+            margin-bottom: 18px;
+        }
+
+        .feature-card .card-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 700;
+            color: #5cb35f;
+            font-size: 15px;
+        }
+
+        .icon {
+            font-size: 52px;
+        }
+
+        /* ================= SERVICES ================= */
+        .services {
+            padding: 90px 8%;
+            background: #eef9f0;
+            color: #1e3321;
+        }
+
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 35px;
+            margin-top: 50px;
+        }
+
+        .service {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, .08);
+            transition: .4s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .service:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 18px 35px rgba(0, 0, 0, .12);
+        }
+
+        .service h3 {
+            color: #2d5231;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .service p {
+            color: #666;
+            font-size: 16px;
+            line-height: 1.8;
+            margin-bottom: 25px;
+        }
+
+        .service a {
+            display: inline-block;
+            padding: 12px 30px;
+            background: #5cb35f;
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: bold;
+            transition: .3s;
+            align-self: center;
+        }
+
+        .service a:hover {
+            background: #2d5231;
+            transform: translateY(-2px);
+        }
+
+        /* ================= FOOTER ================= */
+        footer {
+            background: #204224;
+            padding: 45px 8% 30px;
+            text-align: center;
+            color: white;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        footer h2 {
+            font-size: 26px;
+            margin-bottom: 12px;
+        }
+
+        footer p {
+            margin: 6px;
+            font-size: 16px;
+            color: #d9f4db;
+        }
+
+        .footer-links {
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: #a8f5ac;
+            text-decoration: none;
+            font-size: 15px;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: #ffffff;
+            text-decoration: underline;
+        }
+
+        .copy {
+            margin-top: 25px;
+            font-size: 14px;
+            color: #b5dab7;
+        }
+
+        @media(max-width: 900px) {
+            .hero-box h1 {
+                font-size: 38px;
+            }
+            header {
+                padding: 15px 5%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ================= HEADER ================ -->
+    <header>
+        <a href="index.html" class="logo">
+            🌾 <span>AgriVision AI</span>
+        </a>
+
+        <nav>
+            <a href="index.html" class="active">Home</a>
+            <a href="crop-recommend.html">Crop</a>
+            <a href="fertilizer.html">Fertilizer</a>
+            <a href="disease.html">Disease</a>
+            <a href="profile.html">Profile</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+            <a href="login.html" class="login-btn" id="navAccountBtn">Login</a>
+        </nav>
+    </header>
+
+    <!-- ================= HERO ================ -->
+    <section class="hero">
+        <div class="hero-box">
+            <h1>
+                Smart Farming with<br>
+                <span>Artificial Intelligence</span>
+            </h1>
+
+            <p>
+                Welcome to <b>AgriVision AI</b> 🌾
+                A professional Agriculture Management System developed
+                using <span class="highlight">Artificial Intelligence,
+                Machine Learning, and Interactive Analytics.</span>
+            </p>
+
+            <p>
+                Our platform helps farmers increase productivity through
+                AI-powered Crop Recommendation, Fertilizer Optimization,
+                Plant Disease Detection, and Farmer Profile Management.
+            </p>
+
+            <p>
+                Make smarter farming decisions using real-time agricultural
+                analytics and intelligent recommendations.
+            </p>
+
+            <div class="buttons">
+                <a href="crop-recommend.html" class="btn1">
+                    🌱 Start Prediction
+                </a>
+                <a href="profile.html" class="btn3">
+                    👨‍🌾 Farmer Profile
+                </a>
+                <a href="about.html" class="btn2">
+                    📖 Learn More
+                </a>
+            </div>
+
+            <div class="scroll">
+                ⬇ Scroll Down to Explore Features
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= FEATURES SECTION ================= -->
+    <section class="features">
+        <div class="title">
+            <h2>🌾 AI Smart Agriculture Features</h2>
+            <p>
+                AgriVision AI provides intelligent agricultural solutions
+                using Artificial Intelligence and Machine Learning to help
+                farmers improve productivity, reduce costs and maximize yield.
+            </p>
+        </div>
+
+        <div class="feature-grid">
+            <a href="crop-recommend.html" class="feature-card">
+                <div>
+                    <div class="icon">🌱</div>
+                    <h3>Crop Recommendation</h3>
+                    <p>
+                        Predict the most suitable crop using soil nutrients like
+                        Nitrogen, Phosphorus, Potassium, Temperature, Humidity and Soil pH.
+                    </p>
+                </div>
+                <span class="card-action">Launch Tool &rarr;</span>
+            </a>
+
+            <a href="fertilizer.html" class="feature-card">
+                <div>
+                    <div class="icon">🧪</div>
+                    <h3>Fertilizer Recommendation</h3>
+                    <p>
+                        Receive accurate fertilizer suggestions according to crop type,
+                        soil nutrients and environmental conditions using AI algorithms.
+                    </p>
+                </div>
+                <span class="card-action">Calculate Dosage &rarr;</span>
+            </a>
+
+            <a href="disease.html" class="feature-card">
+                <div>
+                    <div class="icon">🦠</div>
+                    <h3>Disease Detection</h3>
+                    <p>
+                        Identify plant conditions and detect diseases instantly with symptoms
+                        analysis and organic remedies.
+                    </p>
+                </div>
+                <span class="card-action">Diagnose Plant &rarr;</span>
+            </a>
+
+            <a href="crop-recommend.html" class="feature-card">
+                <div>
+                    <div class="icon">📊</div>
+                    <h3>Real-Time Analytics</h3>
+                    <p>
+                        View agricultural insights, prediction reports and farming
+                        statistics for better decision making.
+                    </p>
+                </div>
+                <span class="card-action">View Analytics &rarr;</span>
+            </a>
+
+            <a href="contact.html" class="feature-card">
+                <div>
+                    <div class="icon">☁</div>
+                    <h3>Weather & Support</h3>
+                    <p>
+                        Monitor weather conditions that affect crop growth and
+                        receive expert farming assistance 24/7.
+                    </p>
+                </div>
+                <span class="card-action">Contact Support &rarr;</span>
+            </a>
+
+            <a href="profile.html" class="feature-card">
+                <div>
+                    <div class="icon">👨‍🌾</div>
+                    <h3>Farmer Profile</h3>
+                    <p>
+                        Maintain farmer details, farm information, and prediction
+                        history securely in your personalized portal.
+                    </p>
+                </div>
+                <span class="card-action">Open Profile &rarr;</span>
+            </a>
+        </div>
+    </section>
+
+    <!-- ================= SERVICES ================= -->
+    <section class="services">
+        <div class="title">
+            <h2>🚜 Our Smart Agriculture Services</h2>
+            <p>
+                Professional AI-based farming services developed to improve
+                agricultural productivity and sustainability.
+            </p>
+        </div>
+
+        <div class="service-grid">
+            <div class="service">
+                <div>
+                    <div class="icon" style="margin-bottom:15px;">🌾</div>
+                    <h3>Crop Prediction</h3>
+                    <p>
+                        Find the best crop according to soil nutrient values and
+                        environmental conditions.
+                    </p>
+                </div>
+                <a href="crop-recommend.html">Open Tool</a>
+            </div>
+
+            <div class="service">
+                <div>
+                    <div class="icon" style="margin-bottom:15px;">🌿</div>
+                    <h3>Fertilizer Advisory</h3>
+                    <p>
+                        Get suitable fertilizer recommendations for healthy crop
+                        growth and higher production.
+                    </p>
+                </div>
+                <a href="fertilizer.html">Open Tool</a>
+            </div>
+
+            <div class="service">
+                <div>
+                    <div class="icon" style="margin-bottom:15px;">🍃</div>
+                    <h3>Disease Detection</h3>
+                    <p>
+                        Detect plant diseases using Artificial Intelligence and
+                        receive preventive recommendations.
+                    </p>
+                </div>
+                <a href="disease.html">Open Tool</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= FOOTER ================= -->
+    <footer>
+        <h2>🌾 AgriVision AI System</h2>
+        <p>Empowering Agriculture with Intelligence, Precision & Care</p>
+        
+        <div class="footer-links">
+            <a href="index.html">Home</a>
+            <a href="crop-recommend.html">Crop Prediction</a>
+            <a href="fertilizer.html">Fertilizer</a>
+            <a href="disease.html">Disease Detection</a>
+            <a href="profile.html">Farmer Profile</a>
+            <a href="about.html">About Us</a>
+            <a href="contact.html">Support</a>
+            <a href="login.html">Login</a>
+        </div>
+
+        <div class="copy">
+            © 2026 AgriVision AI | Smart Agriculture Intelligence System
+        </div>
+    </footer>
+
+    <!-- ================= SCRIPT ================= -->
+    <script>
+        // Check for logged-in user and update nav
+        window.addEventListener("DOMContentLoaded", () => {
+            const savedUser = localStorage.getItem("agri_user");
+            if (savedUser) {
+                try {
+                    const user = JSON.parse(savedUser);
+                    if (user.fullname) {
+                        const accountBtn = document.getElementById("navAccountBtn");
+                        accountBtn.innerHTML = "👤 " + user.fullname.split(" ")[0];
+                        accountBtn.href = "profile.html";
+                    }
+                } catch (e) {
+                    console.error("Error reading profile", e);
+                }
+            }
+            console.log("🌾 AgriVision AI Connected Successfully");
+        });
+    </script>
+</body>
+</html>

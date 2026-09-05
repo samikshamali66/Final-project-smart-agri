@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmer Profile & Farm Dashboard | AgriVision AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+        }
+
+        :root {
+            --primary: #5cb35f;
+            --primary-dark: #2d5231;
+            --primary-light: #8cff90;
+            --accent: #e2a03f;
+            --dark-bg: #152b19;
+            --card-bg: rgba(255, 255, 255, 0.92);
+            --card-glass: rgba(255, 255, 255, 0.15);
+            --text-dark: #1e3321;
+            --text-muted: #557559;
+            --shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+            --radius: 20px;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(rgba(18, 45, 22, 0.65), rgba(18, 45, 22, 0.65)),
+                url("https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1800&q=80");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: var(--text-dark);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ================= NAVIGATION ================= */
+        header {
+            position: sticky;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 8%;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 26px;
+            font-weight: 800;
+            color: #ffffff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo span {
+            color: var(--primary-light);
+        }
+
+        nav {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
+            padding: 8px 16px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        nav a:hover {
+            background: rgba(92, 179, 95, 0.6);
+            transform: translateY(-2px);
+        }
+
+        nav a.active {
+            background: var(--primary);
+            color: #ffffff;
+            box-shadow: 0 4px 15px rgba(92, 179, 95, 0.4);
+        }
+
+        .nav-btn-login {
+            background: rgba(255, 255, 255, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+
+        /* ================= MAIN CONTAINER ================= */
+        .main-content {
+            width: 92%;
+            max-width: 1320px;
+            margin: 40px auto;
+            flex: 1;
+        }
+
+        /* Top Hero Profile Banner */
+        .profile-hero {
+            background: rgba(255, 255, 255, 0.94);
+            border-radius: var(--radius);
+            padding: 35px 40px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(15px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 25px;
+            margin-bottom: 30px;
+            border-left: 8px solid var(--primary);
+            animation: fadeIn 0.8s ease;
+        }
+
+        .farmer-info-group {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .avatar-circle {
+            width: 105px;
+            height: 105px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #5cb35f, #2d5231);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            box-shadow: 0 8px 25px rgba(45, 82, 49, 0.35);
+            border: 4px solid #ffffff;
+        }
+
+        .farmer-details h1 {
+            font-size: 32px;
+            color: var(--primary-dark);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .badge-verified {
+            font-size: 13px;
+            font-weight: 700;
+            background: #e6f7e8;
+            color: #2e7d32;
+            padding: 4px 12px;
+            border-radius: 20px;
+            border: 1px solid #b2dfdb;
+        }
+
+        .farmer-details p {
+            color: var(--text-muted);
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .farmer-meta-chips {
+            display: flex;
+            gap: 12px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .chip {
+            background: #f1f8f3;
+            border: 1px solid rgba(92, 179, 95, 0.35);
+            color: var(--primary-dark);
+            font-size: 13px;
+            font-weight: 600;
+            padding: 5px 12px;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 22px;
+            border-radius: 30px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #6ec271, #2d5231);
+            color: white;
+            box-shadow: 0 4px 15px rgba(45, 82, 49, 0.25);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(45, 82, 49, 0.35);
+        }
+
+        .btn-outline {
+            background: white;
+            color: var(--primary-dark);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: #f1f8f3;
+            transform: translateY(-3px);
+        }
+
+        .btn-danger {
+            background: #ffebee;
+            color: #c62828;
+            border: 1px solid #ffcdd2;
+        }
+
+        .btn-danger:hover {
+            background: #ef5350;
+            color: white;
+        }
+
+        /* ================= DASHBOARD GRID ================= */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+
+        /* Stat Metrics Row */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.94);
+            border-radius: 18px;
+            padding: 22px;
+            box-shadow: var(--shadow);
+            border-top: 5px solid var(--primary);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card .stat-label {
+            font-size: 14px;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .stat-card .stat-value {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--primary-dark);
+        }
+
+        .stat-card .stat-sub {
+            font-size: 13px;
+            color: #388e3c;
+            margin-top: 6px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Main Panel Cards */
+        .content-card {
+            background: rgba(255, 255, 255, 0.94);
+            border-radius: var(--radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            backdrop-filter: blur(12px);
+        }
+
+        .content-card h2 {
+            font-size: 22px;
+            color: var(--primary-dark);
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #e8f5e9;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Farm Details Specs Grid */
+        .spec-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 18px;
+        }
+
+        .spec-item {
+            background: #f9fbf9;
+            padding: 16px;
+            border-radius: 14px;
+            border: 1px solid #e2ece3;
+        }
+
+        .spec-item label {
+            display: block;
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .spec-item .value {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+
+        /* Recent Activity / Prediction History List */
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .history-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            background: #fbfdfb;
+            border: 1px solid #e2ede3;
+            border-radius: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .history-item:hover {
+            background: #f1f8f3;
+            border-color: var(--primary);
+            transform: translateX(4px);
+        }
+
+        .history-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .history-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: #e8f5e9;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+
+        .history-text h4 {
+            font-size: 16px;
+            color: var(--primary-dark);
+            margin-bottom: 4px;
+        }
+
+        .history-text p {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .history-badge {
+            font-size: 12px;
+            font-weight: 700;
+            padding: 6px 12px;
+            border-radius: 20px;
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        /* Quick Action Tools Cards */
+        .quick-actions-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        .tool-link-card {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 16px 20px;
+            border-radius: 16px;
+            background: #fbfdfb;
+            border: 1px solid #e2ece3;
+            text-decoration: none;
+            color: var(--text-dark);
+            transition: all 0.3s ease;
+        }
+
+        .tool-link-card:hover {
+            background: #eef9f0;
+            border-color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 18px rgba(92, 179, 95, 0.15);
+        }
+
+        .tool-icon {
+            font-size: 28px;
+        }
+
+        .tool-content h4 {
+            font-size: 16px;
+            color: var(--primary-dark);
+            margin-bottom: 2px;
+        }
+
+        .tool-content p {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* Modal for Editing Profile */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(6px);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-box {
+            background: white;
+            border-radius: 24px;
+            width: 100%;
+            max-width: 650px;
+            padding: 35px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: popIn 0.3s ease;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e8f5e9;
+        }
+
+        .modal-header h3 {
+            font-size: 24px;
+            color: var(--primary-dark);
+        }
+
+        .btn-close {
+            background: none;
+            border: none;
+            font-size: 26px;
+            cursor: pointer;
+            color: #888;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-bottom: 6px;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #cfe2d1;
+            border-radius: 10px;
+            font-size: 15px;
+            outline: none;
+            transition: border 0.3s;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 8px rgba(92, 179, 95, 0.3);
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(20, 50, 24, 0.95);
+            backdrop-filter: blur(12px);
+            padding: 30px;
+            text-align: center;
+            color: #cdeccd;
+            font-size: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 40px;
+        }
+
+        footer a {
+            color: var(--primary-light);
+            text-decoration: none;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @media (max-width: 950px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            .profile-hero {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ================= NAVBAR ================= -->
+    <header>
+        <a href="index.html" class="logo">
+            🌾 <span>AgriVision AI</span>
+        </a>
+
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="crop-recommend.html">Crop Prediction</a>
+            <a href="fertilizer.html">Fertilizer</a>
+            <a href="disease.html">Disease Detection</a>
+            <a href="profile.html" class="active">Farmer Profile</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Support</a>
+            <a href="login.html" class="nav-btn-login" id="navAccountBtn">👤 Account</a>
+        </nav>
+    </header>
+
+    <!-- ================= MAIN DASHBOARD ================= -->
+    <main class="main-content">
+
+        <!-- Farmer Profile Header Card -->
+        <section class="profile-hero">
+            <div class="farmer-info-group">
+                <div class="avatar-circle" id="profileAvatar">👨‍🌾</div>
+                <div class="farmer-details">
+                    <h1>
+                        <span id="displayFullName">Samiksha Patil</span>
+                        <span class="badge-verified">✓ Verified Farmer</span>
+                    </h1>
+                    <p id="displayLocation">📍 Nashik, Maharashtra, India</p>
+                    <p id="displayEmail">✉️ samiksha.farmer@agrivision.ai | 📞 +91 98234 56789</p>
+                    <div class="farmer-meta-chips">
+                        <span class="chip">🌾 Member Since: 2024</span>
+                        <span class="chip" id="chipFarmSize">🚜 Farm Size: 12.5 Acres</span>
+                        <span class="chip" id="chipSoilType">🌱 Black Cotton Soil</span>
+                        <span class="chip" id="chipKisanId">🆔 Kisan ID: AGRI-MH-8842</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero-actions">
+                <button class="btn btn-primary" onclick="openEditModal()">
+                    ✏️ Edit Profile
+                </button>
+                <a href="crop-recommend.html" class="btn btn-outline">
+                    🌱 Run Prediction
+                </a>
+                <button class="btn btn-danger" onclick="logoutUser()">
+                    🚪 Logout
+                </button>
+            </div>
+        </section>
+
+        <!-- Stat Highlights -->
+        <section class="stats-row">
+            <div class="stat-card">
+                <div class="stat-label">
+                    <span>Total Cultivated Land</span>
+                    <span>🚜</span>
+                </div>
+                <div class="stat-value" id="statLandArea">12.5 <span style="font-size:18px;">Acres</span></div>
+                <div class="stat-sub">100% Active Production</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-label">
+                    <span>Soil Health Score</span>
+                    <span>🌿</span>
+                </div>
+                <div class="stat-value">8.6 <span style="font-size:18px;">/ 10</span></div>
+                <div class="stat-sub">Optimal N-P-K Balance</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-label">
+                    <span>AI Predictions Run</span>
+                    <span>🤖</span>
+                </div>
+                <div class="stat-value" id="statTotalPredictions">18</div>
+                <div class="stat-sub">Crops, Fertilizers & Diseases</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-label">
+                    <span>Pest / Disease Risk</span>
+                    <span>🛡️</span>
+                </div>
+                <div class="stat-value" style="color:#2e7d32;">LOW</div>
+                <div class="stat-sub">Field health status normal</div>
+            </div>
+        </section>
+
+        <!-- 2 Column Layout: Details & History vs Quick Tools -->
+        <div class="dashboard-grid">
+            
+            <!-- Left Column -->
+            <div>
+                <!-- Farm Overview Specifications -->
+                <div class="content-card">
+                    <h2>
+                        <span>🏡 Registered Farm Details</span>
+                        <button class="btn btn-outline" style="font-size:12px; padding:6px 14px;" onclick="openEditModal()">Modify Details</button>
+                    </h2>
+                    <div class="spec-grid">
+                        <div class="spec-item">
+                            <label>Primary Crops</label>
+                            <div class="value" id="specPrimaryCrops">Wheat, Cotton, Sugarcane</div>
+                        </div>
+                        <div class="spec-item">
+                            <label>Soil Type & pH</label>
+                            <div class="value" id="specSoilPh">Black Loamy / pH 6.8</div>
+                        </div>
+                        <div class="spec-item">
+                            <label>Irrigation System</label>
+                            <div class="value" id="specIrrigation">Drip Irrigation + Canal</div>
+                        </div>
+                        <div class="spec-item">
+                            <label>Annual Rainfall Expectancy</label>
+                            <div class="value">950 - 1100 mm</div>
+                        </div>
+                        <div class="spec-item">
+                            <label>Registered Farm Address</label>
+                            <div class="value" id="specAddress">Plot 45, Agro Tech Zone, Nashik, MH</div>
+                        </div>
+                        <div class="spec-item">
+                            <label>Assigned Agro-Officer</label>
+                            <div class="value">Dr. A. Deshmukh (AgriVision AI)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent AI Predictions / Activity -->
+                <div class="content-card">
+                    <h2>
+                        <span>📋 Recent AI Intelligence & History</span>
+                        <button class="btn btn-outline" style="font-size:12px; padding:6px 14px;" onclick="clearHistory()">Clear History</button>
+                    </h2>
+                    <div class="history-list" id="predictionHistoryList">
+                        <!-- Dynamic history populated via JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div>
+                <!-- Quick AI Services Launcher -->
+                <div class="content-card">
+                    <h2>🚀 Quick AI Services</h2>
+                    <div class="quick-actions-grid">
+                        <a href="crop-recommend.html" class="tool-link-card">
+                            <div class="tool-icon">🌾</div>
+                            <div class="tool-content">
+                                <h4>Crop Yield Prediction</h4>
+                                <p>Get optimal crop choice based on soil & climate.</p>
+                            </div>
+                        </a>
+
+                        <a href="fertilizer.html" class="tool-link-card">
+                            <div class="tool-icon">🌿</div>
+                            <div class="tool-content">
+                                <h4>Fertilizer Advisory</h4>
+                                <p>Calculate exact N-P-K nutrient dosage per acre.</p>
+                            </div>
+                        </a>
+
+                        <a href="disease.html" class="tool-link-card">
+                            <div class="tool-icon">🦠</div>
+                            <div class="tool-content">
+                                <h4>Crop Disease Detection</h4>
+                                <p>Analyze leaf symptoms and preventive cures.</p>
+                            </div>
+                        </a>
+
+                        <a href="contact.html" class="tool-link-card">
+                            <div class="tool-icon">📞</div>
+                            <div class="tool-content">
+                                <h4>Agri Specialist Support</h4>
+                                <p>Connect with technical farming advisors 24/7.</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Weather & Seasonal Alert Card -->
+                <div class="content-card" style="background: linear-gradient(135deg, #f3faf4, #e2f5e5); border: 1px solid #ccebd1;">
+                    <h2 style="border-color:#bfe3c5;">🌤️ Local Weather & Advisory</h2>
+                    <div style="font-size:32px; font-weight:800; color:var(--primary-dark); margin: 10px 0;">
+                        28°C <span style="font-size:16px; font-weight:600; color:#557559;">Partly Sunny</span>
+                    </div>
+                    <p style="font-size:14px; color:#2d5231; line-height:1.6; margin-bottom:12px;">
+                        💧 <b>Humidity:</b> 58% | 💨 <b>Wind:</b> 11 km/h<br>
+                        🌱 <b>Recommendation:</b> Ideal weather window for organic foliar spray and basal fertilizer application over the next 48 hours.
+                    </p>
+                    <a href="fertilizer.html" class="btn btn-primary" style="font-size:13px; padding:8px 18px;">Check Fertilizer Dosage</a>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- ================= EDIT PROFILE MODAL ================= -->
+    <div class="modal" id="editProfileModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>✏️ Edit Farmer Profile</h3>
+                <button class="btn-close" onclick="closeEditModal()">&times;</button>
+            </div>
+            <form id="profileEditForm" onsubmit="saveProfile(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="inputFullName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" id="inputEmail" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="text" id="inputPhone" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Location (City / State)</label>
+                        <input type="text" id="inputLocation" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Total Farm Size (Acres)</label>
+                        <input type="number" step="0.5" id="inputFarmSize" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Soil Type</label>
+                        <select id="inputSoilType">
+                            <option value="Black Cotton Soil">Black Cotton Soil</option>
+                            <option value="Red Sandy Loam">Red Sandy Loam</option>
+                            <option value="Clayey Loam">Clayey Loam</option>
+                            <option value="Alluvial Soil">Alluvial Soil</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Primary Crops Grown</label>
+                    <input type="text" id="inputCrops" placeholder="e.g. Wheat, Cotton, Sugarcane" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Irrigation Method</label>
+                    <select id="inputIrrigation">
+                        <option value="Drip Irrigation + Canal">Drip Irrigation + Canal</option>
+                        <option value="Sprinkler Irrigation">Sprinkler Irrigation</option>
+                        <option value="Borewell + Drip">Borewell + Drip</option>
+                        <option value="Rainfed (Natural)">Rainfed (Natural)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Residential & Farm Address</label>
+                    <textarea id="inputAddress" rows="3" required></textarea>
+                </div>
+
+                <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:20px;">
+                    <button type="button" class="btn btn-outline" onclick="closeEditModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">💾 Save Profile</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ================= FOOTER ================= -->
+    <footer>
+        <p>© 2026 AgriVision AI | Smart Agriculture Intelligence & Farmer Management System 🌾</p>
+        <p style="margin-top:8px; font-size:13px;">
+            Connected Modules: <a href="index.html">Home</a> | <a href="crop-recommend.html">Crop Recommendation</a> | <a href="fertilizer.html">Fertilizer Advisory</a> | <a href="disease.html">Disease Detection</a> | <a href="about.html">About</a> | <a href="contact.html">Support</a>
+        </p>
+    </footer>
+
+    <!-- ================= JAVASCRIPT ================= -->
+    <script>
+        // Default Farmer Profile Data
+        const defaultProfile = {
+            fullname: "Samiksha Patil",
+            email: "samiksha.farmer@agrivision.ai",
+            phone: "+91 98234 56789",
+            location: "Nashik, Maharashtra, India",
+            farmSize: "12.5",
+            soilType: "Black Cotton Soil",
+            crops: "Wheat, Cotton, Sugarcane",
+            irrigation: "Drip Irrigation + Canal",
+            address: "Plot 45, Agro Tech Zone, Nashik, Maharashtra",
+            kisanId: "AGRI-MH-8842",
+            avatar: "👩‍🌾"
+        };
+
+        // Default Sample Prediction History
+        const defaultHistory = [
+            {
+                type: "Crop Recommendation",
+                icon: "🌾",
+                title: "Recommended: Wheat 🌿",
+                detail: "Soil pH: 6.8, Rainfall: 750mm, Temp: 22°C | Expected Yield: 4.8 T/Ha",
+                date: "Today, 10:15 AM",
+                badge: "High Yield"
+            },
+            {
+                type: "Fertilizer Advisory",
+                icon: "🌿",
+                title: "Optimal Fertilizer: Urea + DAP Blend",
+                detail: "Crop: Cotton | N: 90, P: 45, K: 40 | Dosage: 45 kg/Acre",
+                date: "Yesterday",
+                badge: "Soil Balanced"
+            },
+            {
+                type: "Disease Detection",
+                icon: "🦠",
+                title: "Diagnosis: Leaf Spot Risk - Low",
+                detail: "Crop: Grapes | Preventive bio-fungicide recommended",
+                date: "3 days ago",
+                badge: "Healthy"
+            }
+        ];
+
+        // Load profile from localStorage or initialize
+        function loadFarmerProfile() {
+            const saved = localStorage.getItem("agri_user");
+            let profile = defaultProfile;
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    profile = { ...defaultProfile, ...parsed };
+                } catch(e) {
+                    console.error("Error parsing saved profile", e);
+                }
+            }
+
+            // Update UI elements
+            document.getElementById("displayFullName").innerText = profile.fullname || "Farmer";
+            document.getElementById("displayLocation").innerText = "📍 " + (profile.location || "Maharashtra, India");
+            document.getElementById("displayEmail").innerText = "✉️ " + (profile.email || "farmer@agrivision.ai") + " | 📞 " + (profile.phone || "+91 98000 00000");
+            document.getElementById("chipFarmSize").innerText = "🚜 Farm Size: " + (profile.farmSize || "10") + " Acres";
+            document.getElementById("chipSoilType").innerText = "🌱 " + (profile.soilType || "Loamy Soil");
+            document.getElementById("chipKisanId").innerText = "🆔 Kisan ID: " + (profile.kisanId || "AGRI-MH-1001");
+            document.getElementById("statLandArea").innerHTML = (profile.farmSize || "10") + ' <span style="font-size:18px;">Acres</span>';
+            document.getElementById("specPrimaryCrops").innerText = profile.crops || "Wheat, Maize";
+            document.getElementById("specSoilPh").innerText = (profile.soilType || "Black Loamy") + " / pH 6.8";
+            document.getElementById("specIrrigation").innerText = profile.irrigation || "Drip Irrigation";
+            document.getElementById("specAddress").innerText = profile.address || "Agro Zone";
+
+            // Update nav badge
+            const navBtn = document.getElementById("navAccountBtn");
+            if (navBtn) {
+                navBtn.innerHTML = "👤 " + (profile.fullname ? profile.fullname.split(" ")[0] : "Profile");
+            }
+        }
+
+        // Load Activity / Prediction History
+        function loadHistory() {
+            const historyContainer = document.getElementById("predictionHistoryList");
+            const savedHistory = localStorage.getItem("agri_prediction_history");
+            let list = defaultHistory;
+            if (savedHistory) {
+                try {
+                    const parsed = JSON.parse(savedHistory);
+                    if (Array.isArray(parsed) && parsed.length > 0) {
+                        list = parsed;
+                    }
+                } catch(e) {
+                    console.error(e);
+                }
+            }
+
+            document.getElementById("statTotalPredictions").innerText = list.length;
+
+            if (list.length === 0) {
+                historyContainer.innerHTML = '<p style="color:#666; font-style:italic; padding:15px;">No prediction records yet. Run your first crop or fertilizer analysis!</p>';
+                return;
+            }
+
+            historyContainer.innerHTML = list.map(item => `
+                <div class="history-item">
+                    <div class="history-info">
+                        <div class="history-icon">${item.icon || "🌱"}</div>
+                        <div class="history-text">
+                            <h4>${item.title}</h4>
+                            <p>${item.detail} • <span style="color:#888;">${item.date || "Recent"}</span></p>
+                        </div>
+                    </div>
+                    <span class="history-badge">${item.badge || item.type || "Verified"}</span>
+                </div>
+            `).join("");
+        }
+
+        function clearHistory() {
+            if (confirm("Are you sure you want to clear your prediction activity history?")) {
+                localStorage.removeItem("agri_prediction_history");
+                loadHistory();
+            }
+        }
+
+        // Modal Controls
+        function openEditModal() {
+            const saved = localStorage.getItem("agri_user");
+            let profile = defaultProfile;
+            if (saved) {
+                try { profile = { ...defaultProfile, ...JSON.parse(saved) }; } catch(e){}
+            }
+
+            document.getElementById("inputFullName").value = profile.fullname || "";
+            document.getElementById("inputEmail").value = profile.email || "";
+            document.getElementById("inputPhone").value = profile.phone || "";
+            document.getElementById("inputLocation").value = profile.location || "";
+            document.getElementById("inputFarmSize").value = profile.farmSize || "";
+            document.getElementById("inputSoilType").value = profile.soilType || "Black Cotton Soil";
+            document.getElementById("inputCrops").value = profile.crops || "";
+            document.getElementById("inputIrrigation").value = profile.irrigation || "Drip Irrigation + Canal";
+            document.getElementById("inputAddress").value = profile.address || "";
+
+            document.getElementById("editProfileModal").classList.add("active");
+        }
+
+        function closeEditModal() {
+            document.getElementById("editProfileModal").classList.remove("active");
+        }
+
+        function saveProfile(e) {
+            e.preventDefault();
+            const updated = {
+                fullname: document.getElementById("inputFullName").value,
+                email: document.getElementById("inputEmail").value,
+                phone: document.getElementById("inputPhone").value,
+                location: document.getElementById("inputLocation").value,
+                farmSize: document.getElementById("inputFarmSize").value,
+                soilType: document.getElementById("inputSoilType").value,
+                crops: document.getElementById("inputCrops").value,
+                irrigation: document.getElementById("inputIrrigation").value,
+                address: document.getElementById("inputAddress").value,
+                kisanId: defaultProfile.kisanId
+            };
+
+            localStorage.setItem("agri_user", JSON.stringify(updated));
+            loadFarmerProfile();
+            closeEditModal();
+            alert("Farmer Profile updated successfully! ✅");
+        }
+
+        function logoutUser() {
+            if (confirm("Do you want to switch accounts or log out?")) {
+                window.location.href = "login.html";
+            }
+        }
+
+        // Initialize on page load
+        window.addEventListener("DOMContentLoaded", () => {
+            loadFarmerProfile();
+            loadHistory();
+        });
+    </script>
+</body>
+</html>

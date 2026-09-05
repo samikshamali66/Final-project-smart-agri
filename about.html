@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | AgriVision AI</title>
+    <style>
+        :root {
+            --dark: #2d5231;
+            --green: #5cb35f;
+            --light-green: #8cff90;
+            --text: #1e3321;
+            --muted: #557559;
+            --border: rgba(92, 179, 95, .3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(
+                rgba(25, 70, 25, 0.55),
+                rgba(25, 70, 25, 0.45)
+            ),
+            url("https://images.unsplash.com/photo-1500382017468-9049fed747ef")
+            center/cover fixed;
+            min-height: 100vh;
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            line-height: 1.6;
+        }
+
+        /* NAVBAR */
+        header {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            padding: 16px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .logo {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--dark);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo span {
+            color: #3b8b3e;
+        }
+
+        nav {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #355d3a;
+            font-weight: 600;
+            font-size: 15px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        nav a:hover,
+        nav a.active {
+            background: #5cb35f;
+            color: white;
+            box-shadow: 0 4px 12px rgba(92, 179, 95, 0.35);
+        }
+
+        .nav-login {
+            background: #2d5231;
+            color: white !important;
+        }
+
+        .nav-login:hover {
+            background: #1b381e !important;
+        }
+
+        /* ABOUT CARD */
+        .about-container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 50px auto;
+            flex: 1;
+        }
+
+        .about-card {
+            background: rgba(255, 255, 255, .92);
+            padding: 45px;
+            border-radius: 30px;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, .5);
+            box-shadow: 0 20px 50px rgba(45, 82, 49, .25);
+        }
+
+        .title {
+            text-align: center;
+            font-size: 38px;
+            font-weight: 800;
+            color: #2d5231;
+        }
+
+        .subtitle {
+            text-align: center;
+            margin: 15px 0 40px;
+            color: #557559;
+            font-size: 18px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section h2 {
+            color: #2d5231;
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+
+        .section p {
+            font-size: 17px;
+            text-align: justify;
+            color: #18351d;
+            line-height: 1.8;
+        }
+
+        /* FEATURE CARDS */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 35px;
+        }
+
+        .box {
+            background: rgba(255, 255, 255, .85);
+            padding: 25px;
+            border-radius: 20px;
+            text-align: center;
+            border: 1px solid rgba(92, 179, 95, .3);
+            box-shadow: 0 10px 25px rgba(45, 82, 49, .12);
+            transition: .3s;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .box:hover {
+            transform: translateY(-8px);
+            background: white;
+            box-shadow: 0 15px 35px rgba(45, 82, 49, .2);
+        }
+
+        .icon {
+            font-size: 45px;
+        }
+
+        .box h3 {
+            color: #2d5231;
+            margin: 12px;
+            font-size: 20px;
+        }
+
+        .box p {
+            color: #557559;
+            font-size: 15px;
+        }
+
+        /* Action bar */
+        .action-hub {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid #e0eee2;
+            display: flex;
+            justify-content: center;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+
+        .btn-action {
+            display: inline-block;
+            padding: 14px 28px;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: .3s;
+        }
+
+        .btn-primary {
+            background: #5cb35f;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2d5231;
+            transform: translateY(-3px);
+        }
+
+        .btn-secondary {
+            background: #e8f5e9;
+            color: #2d5231;
+            border: 2px solid #5cb35f;
+        }
+
+        .btn-secondary:hover {
+            background: #5cb35f;
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        footer {
+            background: rgba(20, 50, 24, 0.95);
+            padding: 24px;
+            text-align: center;
+            color: #cdeccd;
+            margin-top: auto;
+            font-size: 15px;
+        }
+
+        footer a {
+            color: var(--light-green);
+            text-decoration: none;
+        }
+
+        @media(max-width:900px) {
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ================= NAVBAR ================= -->
+    <header>
+        <a href="index.html" class="logo">
+            🌾 <span>AgriVision AI</span>
+        </a>
+
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="crop-recommend.html">Crop Prediction</a>
+            <a href="fertilizer.html">Fertilizer</a>
+            <a href="disease.html">Disease Detection</a>
+            <a href="profile.html">Profile</a>
+            <a href="about.html" class="active">About</a>
+            <a href="contact.html">Support</a>
+            <a href="login.html" class="nav-login" id="navAccountBtn">Login</a>
+        </nav>
+    </header>
+
+    <div class="about-container">
+        <div class="about-card">
+            <h1 class="title">🌱 About AgriVision AI</h1>
+            <p class="subtitle">Smart Agriculture Platform Powered by AI, Machine Learning & Data Analytics</p>
+
+            <div class="section">
+                <h2>🚀 Our Mission</h2>
+                <p>
+                    AgriVision AI transforms traditional farming into smart, sustainable agriculture through advanced Artificial Intelligence, Machine Learning, and field analytics. Our integrated platform empowers farmers with scientific crop yield predictions, tailored fertilizer dosage recommendations, leaf disease detection, and comprehensive farmer profile records.
+                </p>
+            </div>
+
+            <div class="section">
+                <h2>💡 What We Provide</h2>
+                <p>
+                    We provide real-time agricultural intelligence designed for smallholder and commercial farmers alike. By combining environmental telemetry, soil chemistry metrics, and computer vision models, AgriVision AI maximizes harvest yields, eliminates costly fertilizer overuse, and mitigates crop disease outbreaks before they spread.
+                </p>
+            </div>
+
+            <div class="features">
+                <a href="crop-recommend.html" class="box">
+                    <div class="icon">📊</div>
+                    <h3>Crop Analytics</h3>
+                    <p>AI-driven crop selection and yield forecasting based on soil pH, rainfall and temperature.</p>
+                </a>
+
+                <a href="disease.html" class="box">
+                    <div class="icon">🦠</div>
+                    <h3>Disease Detection</h3>
+                    <p>Early pathogen identification, symptoms analysis and targeted treatment guidance.</p>
+                </a>
+
+                <a href="fertilizer.html" class="box">
+                    <div class="icon">🌱</div>
+                    <h3>Fertilizer Advisory</h3>
+                    <p>Optimal N-P-K nutrient balance and precise dosage calculators for maximum crop health.</p>
+                </a>
+            </div>
+
+            <div class="action-hub">
+                <a href="crop-recommend.html" class="btn-action btn-primary">🌱 Try Crop Prediction</a>
+                <a href="profile.html" class="btn-action btn-secondary">👨‍🌾 View Farmer Profile</a>
+                <a href="contact.html" class="btn-action btn-secondary">📞 Contact Support</a>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2026 AgriVision AI | Smart Agriculture Intelligence System 🌾</p>
+        <p style="margin-top:6px; font-size:13px;">
+            <a href="index.html">Home</a> | <a href="crop-recommend.html">Crop</a> | <a href="fertilizer.html">Fertilizer</a> | <a href="disease.html">Disease</a> | <a href="profile.html">Profile</a> | <a href="contact.html">Support</a>
+        </p>
+    </footer>
+
+    <script>
+        // Check if user is logged in and personalize nav
+        const user = localStorage.getItem("agri_user");
+        if (user) {
+            try {
+                const u = JSON.parse(user);
+                if (u.fullname) {
+                    const btn = document.getElementById("navAccountBtn");
+                    btn.innerHTML = "👤 " + u.fullname.split(" ")[0];
+                    btn.href = "profile.html";
+                }
+            } catch(e) {}
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmer Login & Registration | AgriVision AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+        }
+
+        :root {
+            --green: #5cb35f;
+            --green-dark: #2d5231;
+            --green-light: #8cff90;
+            --white: #ffffff;
+        }
+
+        body {
+            background: linear-gradient(rgba(18, 40, 18, 0.65), rgba(18, 40, 18, 0.65)),
+                url("https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1600&q=80");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 30px 20px;
+        }
+
+        .back-nav {
+            margin-bottom: 20px;
+        }
+
+        .back-nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 10px 22px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .back-nav a:hover {
+            background: var(--green);
+            transform: translateY(-2px);
+        }
+
+        .auth-card {
+            width: 100%;
+            max-width: 600px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 28px;
+            padding: 40px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+            animation: fadeIn 0.6s ease;
+        }
+
+        .logo-box {
+            font-size: 50px;
+            text-align: center;
+            margin-bottom: 5px;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--green-dark);
+            font-size: 30px;
+            font-weight: 800;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #557559;
+            margin-top: 4px;
+            margin-bottom: 25px;
+            font-size: 15px;
+        }
+
+        /* Tabs */
+        .tab-group {
+            display: flex;
+            background: #e8f5e9;
+            border-radius: 15px;
+            padding: 5px;
+            margin-bottom: 25px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            background: transparent;
+            font-size: 15px;
+            font-weight: 700;
+            color: #355d3a;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            background: #5cb35f;
+            color: white;
+            box-shadow: 0 4px 12px rgba(92, 179, 95, 0.35);
+        }
+
+        .form-section {
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            color: var(--green-dark);
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 6px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #c8decb;
+            border-radius: 12px;
+            font-size: 15px;
+            outline: none;
+            background: #fbfdfb;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            border-color: #5cb35f;
+            box-shadow: 0 0 10px rgba(92, 179, 95, 0.3);
+            background: white;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            margin-top: 15px;
+            background: linear-gradient(135deg, #5cb35f, #2d5231);
+            border: none;
+            border-radius: 14px;
+            font-size: 17px;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 18px rgba(45, 82, 49, 0.3);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(45, 82, 49, 0.4);
+        }
+
+        .footer-note {
+            margin-top: 25px;
+            text-align: center;
+            color: #557559;
+            font-size: 14px;
+        }
+
+        .footer-note a {
+            color: var(--green-dark);
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .alert-box {
+            display: none;
+            padding: 14px;
+            border-radius: 12px;
+            margin-bottom: 18px;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .alert-success {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #c8e6c9;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 550px) {
+            .row {
+                grid-template-columns: 1fr;
+            }
+            .auth-card {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="back-nav">
+        <a href="index.html">← Back to AgriVision Home</a>
+    </div>
+
+    <div class="auth-card">
+        <div class="logo-box">🌾</div>
+        <h1>AgriVision AI</h1>
+        <p class="subtitle">Smart Agriculture Management & Farmer Portal</p>
+
+        <!-- Alert Notice -->
+        <div class="alert-box alert-success" id="alertBox"></div>
+
+        <!-- Toggle Tabs -->
+        <div class="tab-group">
+            <button class="tab-btn active" id="tabLogin" onclick="switchTab('login')">Farmer Login</button>
+            <button class="tab-btn" id="tabRegister" onclick="switchTab('register')">New Registration</button>
+        </div>
+
+        <!-- ================= LOGIN FORM ================= -->
+        <div class="form-section active" id="loginSection">
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>Registered Email or Phone</label>
+                    <input type="text" id="loginEmail" placeholder="e.g. samiksha.farmer@agrivision.ai" value="samiksha.farmer@agrivision.ai" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="loginPassword" placeholder="Enter your password" value="farmer123" required>
+                </div>
+
+                <button type="submit" class="submit-btn" id="btnLogin">
+                    🌱 Secure Login & Enter Dashboard
+                </button>
+            </form>
+            <div class="footer-note">
+                Don't have an account yet? <a href="javascript:void(0)" onclick="switchTab('register')">Register here</a>
+            </div>
+        </div>
+
+        <!-- ================= REGISTRATION FORM ================= -->
+        <div class="form-section" id="registerSection">
+            <form id="registerForm" onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label>Full Farmer Name</label>
+                    <input type="text" id="regFullName" placeholder="Enter full name" required>
+                </div>
+
+                <div class="row">
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" id="regEmail" placeholder="Enter email" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="text" id="regPhone" placeholder="+91 98XXX XXXXX" required>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group">
+                        <label>Farm Size (Acres)</label>
+                        <input type="number" step="0.5" id="regFarmSize" placeholder="e.g. 10" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Soil Type</label>
+                        <select id="regSoilType">
+                            <option value="Black Cotton Soil">Black Cotton Soil</option>
+                            <option value="Red Sandy Loam">Red Sandy Loam</option>
+                            <option value="Clayey Loam">Clayey Loam</option>
+                            <option value="Alluvial Soil">Alluvial Soil</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Primary Crops</label>
+                    <input type="text" id="regCrops" placeholder="e.g. Wheat, Cotton, Sugarcane" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Create Password</label>
+                    <input type="password" id="regPassword" placeholder="Minimum 6 characters" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Farm / Residential Location</label>
+                    <textarea id="regAddress" rows="2" placeholder="Village / District / State" required></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn" id="btnRegister">
+                    🌾 Complete Registration & Open Profile
+                </button>
+            </form>
+            <div class="footer-note">
+                Already registered? <a href="javascript:void(0)" onclick="switchTab('login')">Login here</a>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function switchTab(mode) {
+            const tabLogin = document.getElementById("tabLogin");
+            const tabRegister = document.getElementById("tabRegister");
+            const loginSection = document.getElementById("loginSection");
+            const registerSection = document.getElementById("registerSection");
+
+            if (mode === 'login') {
+                tabLogin.classList.add("active");
+                tabRegister.classList.remove("active");
+                loginSection.classList.add("active");
+                registerSection.classList.remove("active");
+            } else {
+                tabRegister.classList.add("active");
+                tabLogin.classList.remove("active");
+                registerSection.classList.add("active");
+                loginSection.classList.remove("active");
+            }
+        }
+
+        function showAlert(msg) {
+            const box = document.getElementById("alertBox");
+            box.innerText = msg;
+            box.style.display = "block";
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const btn = document.getElementById("btnLogin");
+            btn.innerHTML = "⏳ Authenticating...";
+            btn.disabled = true;
+
+            const email = document.getElementById("loginEmail").value;
+            
+            // Check if existing user in localStorage
+            let existing = localStorage.getItem("agri_user");
+            let user = {
+                fullname: "Samiksha Patil",
+                email: email,
+                location: "Nashik, Maharashtra, India",
+                farmSize: "12.5",
+                soilType: "Black Cotton Soil",
+                crops: "Wheat, Cotton, Sugarcane",
+                irrigation: "Drip Irrigation + Canal",
+                kisanId: "AGRI-MH-8842",
+                address: "Plot 45, Agro Tech Zone, Nashik, Maharashtra"
+            };
+
+            if (existing) {
+                try {
+                    const parsed = JSON.parse(existing);
+                    user = { ...user, ...parsed };
+                } catch(err){}
+            }
+
+            localStorage.setItem("agri_user", JSON.stringify(user));
+
+            showAlert("Login Successful! Redirecting to Farmer Profile...");
+
+            setTimeout(() => {
+                window.location.href = "profile.html";
+            }, 800);
+        }
+
+        function handleRegister(e) {
+            e.preventDefault();
+            const btn = document.getElementById("btnRegister");
+            btn.innerHTML = "⏳ Creating Account...";
+            btn.disabled = true;
+
+            const newUser = {
+                fullname: document.getElementById("regFullName").value,
+                email: document.getElementById("regEmail").value,
+                phone: document.getElementById("regPhone").value,
+                farmSize: document.getElementById("regFarmSize").value,
+                soilType: document.getElementById("regSoilType").value,
+                crops: document.getElementById("regCrops").value,
+                address: document.getElementById("regAddress").value,
+                location: document.getElementById("regAddress").value.split(",")[0] || "Maharashtra, India",
+                irrigation: "Drip Irrigation",
+                kisanId: "AGRI-MH-" + Math.floor(1000 + Math.random() * 9000)
+            };
+
+            localStorage.setItem("agri_user", JSON.stringify(newUser));
+
+            showAlert("Registration Successful! Opening your new profile...");
+
+            setTimeout(() => {
+                window.location.href = "profile.html";
+            }, 900);
+        }
+    </script>
+</body>
+</html>
